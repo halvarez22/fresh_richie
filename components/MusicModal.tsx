@@ -1,7 +1,6 @@
 
 import React, { useState, useCallback } from 'react';
 import type { Track } from '../types';
-import { generateSongStory } from '../services/geminiService';
 
 interface MusicModalProps {
   track: Track;
@@ -9,24 +8,6 @@ interface MusicModalProps {
 }
 
 const MusicModal: React.FC<MusicModalProps> = ({ track, onClose }) => {
-  const [story, setStory] = useState<string>('');
-  const [isLoadingStory, setIsLoadingStory] = useState<boolean>(false);
-  const [storyError, setStoryError] = useState<string>('');
-
-  const handleGetStory = useCallback(async () => {
-    setIsLoadingStory(true);
-    setStoryError('');
-    setStory('');
-    try {
-      const result = await generateSongStory(track.title, track.description);
-      setStory(result);
-    } catch (error) {
-      setStoryError('Failed to generate story. Please try again.');
-      console.error(error);
-    } finally {
-      setIsLoadingStory(false);
-    }
-  }, [track.title, track.description]);
 
   return (
     <div
@@ -63,24 +44,6 @@ const MusicModal: React.FC<MusicModalProps> = ({ track, onClose }) => {
                 </div>
             </div>
             
-            <div className="mt-auto">
-              <button
-                onClick={handleGetStory}
-                disabled={isLoadingStory}
-                className="w-full bg-emerald-600 text-white font-bold py-2 px-4 rounded-md hover:bg-emerald-500 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors duration-300"
-              >
-                {isLoadingStory ? 'Interpreting...' : 'Get AI Story Behind The Song'}
-              </button>
-            </div>
-
-            {isLoadingStory && <div className="text-center mt-4 text-slate-400">The AI is listening...</div>}
-            {storyError && <div className="text-red-400 mt-4">{storyError}</div>}
-            {story && (
-              <div className="mt-4 p-4 bg-slate-700/50 rounded-lg border border-slate-600">
-                <h4 className="font-bold text-emerald-300 mb-2">An Interpretation</h4>
-                <p className="text-slate-300 italic">"{story}"</p>
-              </div>
-            )}
           </div>
           <button
             onClick={onClose}
