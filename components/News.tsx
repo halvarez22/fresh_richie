@@ -23,7 +23,15 @@ const News: React.FC<NewsProps> = ({ posts }) => {
               style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
             >
               <div className="overflow-hidden">
-                <img src={post.imageUrl} alt={post.title} className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img 
+                  src={post.imageUrl} 
+                  alt={post.title} 
+                  className="w-full h-56 object-cover object-center group-hover:scale-105 transition-transform duration-500" 
+                  width={400}
+                  height={224}
+                  loading="lazy"
+                  style={{ maxWidth: '100%', maxHeight: '224px' }}
+                />
               </div>
               <div className="p-6 flex flex-col flex-grow">
                 <p className="text-sm text-emerald-400 mb-2">{new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
