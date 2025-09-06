@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global image reset - Force all images to be responsive */
+* img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+}
+
 /* Custom animations */
 @keyframes fade-in-up {
   from {
@@ -45,8 +52,10 @@ img {
 img {
   max-width: 100% !important;
   max-height: 100% !important;
-  width: auto !important;
+  width: 100% !important;
   height: auto !important;
+  object-fit: cover !important;
+  object-position: center !important;
 }
 
 /* Ensure aspect ratios are maintained */
@@ -58,10 +67,21 @@ img {
 
 /* Prevent images from overflowing containers */
 .overflow-hidden img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-  object-position: center;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* Force all containers to have proper overflow handling */
+.aspect-square {
+  overflow: hidden !important;
+}
+
+.group {
+  overflow: hidden !important;
 }
 
 /* Specific styling for music cover art */
