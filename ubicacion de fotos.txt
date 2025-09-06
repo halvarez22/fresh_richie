@@ -1,0 +1,160 @@
+
+Este archivo te guía para reemplazar todas las imágenes de marcador de posición (placeholders) en la página web con las fotos reales del artista.
+
+---
+### Proceso General
+---
+
+1.  **Sube tus imágenes a internet:** Necesitas alojar tus fotos en un servicio que te proporcione un enlace público directo (URL). Puedes usar servicios como Imgur, Cloudinary, o el almacenamiento público de Google Drive/Dropbox.
+2.  **Copia la URL de cada imagen.**
+3.  **Busca el archivo y la línea de código indicados a continuación** y reemplaza el enlace del placeholder con la URL de tu imagen real.
+
+---
+### 1. Portadas de la Música (Sección "Music")
+---
+
+Estas son las portadas de los sencillos y EPs que aparecen en la sección de música.
+
+*   **Archivo a editar:** `constants.ts`
+*   **Qué buscar:** Dentro del array `TRACKS`, busca la propiedad `coverArtUrl` para cada canción.
+
+**Ejemplo:**
+```typescript
+// En el archivo constants.ts
+
+export const TRACKS: Track[] = [
+  // ...
+  {
+    id: 2,
+    title: 'Luces de Neón',
+    // REEMPLAZA ESTA LÍNEA
+    coverArtUrl: 'https://picsum.photos/seed/neon/900/900', 
+    // por ejemplo: coverArtUrl: 'https://URL_DE_TU_IMAGEN_REAL/luces_de_neon.jpg',
+    // ...
+  },
+  // ... y así con las demás canciones.
+];
+```
+
+---
+### 2. Foto Principal (Sección "Hero")
+---
+
+Es la gran imagen de fondo que se ve al entrar a la página.
+
+*   **Archivo a editar:** `components/Hero.tsx`
+*   **Qué buscar:** La propiedad `backgroundImage` dentro de la etiqueta `<section>`.
+
+**Ejemplo:**
+```tsx
+// En el archivo components/Hero.tsx
+
+<section 
+  id="home" 
+  className="..." 
+  // REEMPLAZA LA URL DENTRO DE 'url(...)'
+  style={{ backgroundImage: "url('https://picsum.photos/seed/mic/1920/1080')" }}
+  // por ejemplo: style={{ backgroundImage: "url('https://URL_DE_TU_FOTO_PRINCIPAL.jpg')" }}
+>
+  // ...
+</section>
+```
+
+---
+### 3. Foto del Artista (Sección "About")
+---
+
+La foto de perfil en la sección "Sobre mí".
+
+*   **Archivo a editar:** `components/About.tsx`
+*   **Qué buscar:** La etiqueta `<img>` y su propiedad `src`.
+
+**Ejemplo:**
+```tsx
+// En el archivo components/About.tsx
+
+<img
+    // REEMPLAZA ESTA LÍNEA
+    src="https://picsum.photos/seed/singer/600/700"
+    // por ejemplo: src="https://URL_DE_LA_FOTO_DEL_ARTISTA.jpg"
+    alt="Musician Fresh Richie"
+    className="..."
+/>
+```
+
+---
+### 4. Imágenes de Noticias (Sección "News")
+---
+
+Las imágenes para cada entrada del blog/noticias.
+
+*   **Archivo a editar:** `constants.ts`
+*   **Qué buscar:** Dentro del array `NEWS_POSTS`, la propiedad `imageUrl` de cada post.
+
+**Ejemplo:**
+```typescript
+// En el archivo constants.ts
+
+export const NEWS_POSTS: NewsPost[] = [
+    { 
+      id: 2, 
+      title: 'Fall Tour Dates Announced', 
+      // ...
+      // REEMPLAZA ESTA LÍNEA
+      imageUrl: 'https://picsum.photos/seed/tourbus/800/600',
+      // por ejemplo: imageUrl: 'https://URL_IMAGEN_NOTICIA_2.jpg'
+    },
+    // ... y así con las demás noticias.
+];
+```
+
+---
+### 5. Imágenes de la Tienda (Sección "Store")
+---
+
+Las imágenes para los productos de la tienda (Merch, Vinilos, etc.).
+
+*   **Archivo a editar:** `components/Store.tsx`
+*   **Qué buscar:** Dentro del array `storeItems`, la propiedad `imageUrl` de cada producto.
+
+**Ejemplo:**
+```tsx
+// En el archivo components/Store.tsx
+
+const storeItems = [
+    // ...
+    { 
+      name: 'Vinyl & CDs', 
+      // ...
+      // REEMPLAZA ESTA LÍNEA
+      imageUrl: 'https://picsum.photos/seed/vinyl/800/600',
+      // por ejemplo: imageUrl: 'https://URL_IMAGEN_TIENDA_VINILOS.jpg'
+    },
+    // ... y así con los demás productos.
+];
+```
+
+---
+### 6. Fotos de Prensa para Descargar (Sección "EPK")
+---
+
+Este no es una imagen visible, sino un enlace para que la prensa descargue un archivo `.zip` con fotos en alta resolución.
+
+1. Sube tu archivo `.zip` a un servicio de almacenamiento (Google Drive, Dropbox, etc.) y obtén un enlace de descarga directa.
+2. Reemplaza el enlace en el código.
+
+*   **Archivo a editar:** `components/EPK.tsx`
+*   **Qué buscar:** La etiqueta `<a>` con el texto "Download Photos".
+
+**Ejemplo:**
+```tsx
+// En el archivo components/EPK.tsx
+
+<h3 ...>Hi-Res Photos</h3>
+<p ...>Download a .zip file of high-resolution promotional photos...</p>
+// REEMPLAZA EL href="#" CON EL ENLACE A TU ARCHIVO .ZIP
+<a href="#" className="...">
+    Download Photos (.zip)
+</a>
+// por ejemplo: <a href="https://URL_DE_TU_ARCHIVO.zip" className="...">
+```
