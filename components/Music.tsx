@@ -60,11 +60,10 @@ const Music: React.FC<MusicProps> = ({ tracks, onTrackClick }) => {
               <img
                 src={track.coverArtUrl}
                 alt={track.title}
-                className="w-full h-full object-cover object-center transition-transform duration-500 ease-in-out group-hover:scale-110"
+                className="music-cover"
                 width={300}
                 height={300}
                 loading="lazy"
-                style={{ maxWidth: '100%', maxHeight: '100%' }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-4">
                 <h3 className="text-white text-lg font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-in-out">{track.title}</h3>

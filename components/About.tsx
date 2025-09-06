@@ -11,11 +11,10 @@ const About: React.FC = () => {
               <img
                 src="/524200705_1545546396814758_7884327807306567601_n.jpg" // ✅ FOTO ESPECÍFICA DEL ARTISTA: Fresh Richie
                 alt="Musician Fresh Richie"
-                className="relative w-full h-auto rounded-lg shadow-2xl object-cover object-center"
+                className="artist-image relative shadow-2xl"
                 width={500}
                 height={600}
                 loading="lazy"
-                style={{ maxWidth: '100%', maxHeight: '600px' }}
               />
             </div>
           </div>

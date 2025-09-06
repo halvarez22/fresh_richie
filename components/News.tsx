@@ -26,11 +26,10 @@ const News: React.FC<NewsProps> = ({ posts }) => {
                 <img 
                   src={post.imageUrl} 
                   alt={post.title} 
-                  className="w-full h-56 object-cover object-center group-hover:scale-105 transition-transform duration-500" 
+                  className="news-image group-hover:scale-105 transition-transform duration-500" 
                   width={400}
                   height={224}
                   loading="lazy"
-                  style={{ maxWidth: '100%', maxHeight: '224px' }}
                 />
               </div>
               <div className="p-6 flex flex-col flex-grow">

@@ -36,16 +36,55 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: optimize-quality;
 }
 
 /* Ensure aspect ratios are maintained */
 .aspect-square img {
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  object-position: center;
 }
 
 /* Prevent images from overflowing containers */
 .overflow-hidden img {
   max-width: 100%;
   max-height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Specific styling for music cover art */
+.music-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.music-cover:hover {
+  transform: scale(1.05);
+}
+
+/* News images styling */
+.news-image {
+  width: 100%;
+  height: 224px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Artist image styling */
+.artist-image {
+  width: 100%;
+  height: auto;
+  max-height: 600px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0.5rem;
 }
