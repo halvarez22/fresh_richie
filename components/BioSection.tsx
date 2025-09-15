@@ -1,4 +1,5 @@
 import React from 'react';
+import OptimizedImage from './OptimizedImage';
 
 const BioSection: React.FC = () => {
   return (
@@ -6,7 +7,7 @@ const BioSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="lg:w-1/3 w-full animate-fade-in-up">
-            <img 
+            <OptimizedImage 
               src="/imagen_3.jpg" 
               alt="Fresh Richie"
               className="rounded-lg shadow-2xl object-cover w-full h-full"

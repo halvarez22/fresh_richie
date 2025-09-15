@@ -2,6 +2,7 @@ import React from 'react';
 import { AppleMusicIcon } from './icons/AppleMusicIcon';
 import { SpotifyIcon } from './icons/SpotifyIcon';
 import { YouTubeIcon } from './icons/YouTubeIcon';
+import OptimizedImage from './OptimizedImage';
 
 const MusicSection: React.FC = () => {
   const streamingLinks = [
@@ -33,7 +34,7 @@ const MusicSection: React.FC = () => {
         </p>
         <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-12 animate-fade-in-up">
           <div className="flex-shrink-0">
-            <img 
+            <OptimizedImage 
               src="/imagen_2.jpg" 
               alt="Ya No Somos Nada Album Art" 
               className="w-80 h-80 rounded-lg shadow-2xl transform transition-transform duration-500 hover:scale-105 object-cover" 

@@ -1,4 +1,5 @@
 import React from 'react';
+import OptimizedImage from './OptimizedImage';
 
 const GallerySection: React.FC = () => {
   const images = [
@@ -20,7 +21,7 @@ const GallerySection: React.FC = () => {
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 lg:gap-8 animate-fade-in-up">
           {images.map((src, index) => (
             <div key={index} className="group relative overflow-hidden rounded-lg shadow-lg">
-              <img 
+              <OptimizedImage 
                 src={src} 
                 alt={`Gallery image ${index + 1}`}
                 className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110" 
