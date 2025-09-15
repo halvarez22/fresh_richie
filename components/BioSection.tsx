@@ -7,7 +7,7 @@ const BioSection: React.FC = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="lg:w-1/3 w-full animate-fade-in-up">
             <img 
-              src="./images/imagen_3.jpg" 
+              src="/imagen_3.jpg" 
               alt="Fresh Richie"
               className="rounded-lg shadow-2xl object-cover w-full h-full"
             />

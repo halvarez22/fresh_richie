@@ -2,10 +2,10 @@ import React from 'react';
 
 const GallerySection: React.FC = () => {
   const images = [
-    './images/imagen portada.jpg',
-    './images/imagen_2.jpg',
-    './images/imagen_3.jpg',
-    './images/imagen_4.jpg',
+    '/imagen portada.jpg',
+    '/imagen_2.jpg',
+    '/imagen_3.jpg',
+    '/imagen_4.jpg',
   ];
 
   return (

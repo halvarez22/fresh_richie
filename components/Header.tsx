@@ -5,7 +5,7 @@ const Header: React.FC = () => {
     <header className="relative h-screen flex items-center justify-center text-center overflow-hidden">
       <div
         className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
-        style={{ backgroundImage: "url('./images/imagen portada.jpg')" }}
+        style={{ backgroundImage: "url('/imagen portada.jpg')" }}
       ></div>
       <div className="absolute top-0 left-0 w-full h-full bg-black opacity-60"></div>
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black via-transparent to-transparent"></div>

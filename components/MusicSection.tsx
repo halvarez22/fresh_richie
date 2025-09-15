@@ -34,7 +34,7 @@ const MusicSection: React.FC = () => {
         <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-12 animate-fade-in-up">
           <div className="flex-shrink-0">
             <img 
-              src="./images/imagen_2.jpg" 
+              src="/imagen_2.jpg" 
               alt="Ya No Somos Nada Album Art" 
               className="w-80 h-80 rounded-lg shadow-2xl transform transition-transform duration-500 hover:scale-105 object-cover" 
             />
