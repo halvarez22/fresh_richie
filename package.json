@@ -1,0 +1,30 @@
+{
+  "name": "fresh-richie-portfolio",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Official portfolio website for Mexican artist Fresh Richie. Built with React, TypeScript, and Tailwind CSS.",
+  "author": "Fresh Richie",
+  "homepage": "https://fresh-richie.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/halvarez22/fresh_richie.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}
