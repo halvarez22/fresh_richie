@@ -1,0 +1,95 @@
+{
+  "header": {
+    "title": "Fresh Richie",
+    "subtitle": "La Nueva Era del Urbano Latino",
+    "tagline": "La Nueva Era del Urbano Latino",
+    "backgroundImage": "/imagen portada.jpg",
+    "button1Text": "Escucha Ahora",
+    "button2Text": "Contacto"
+  },
+  "music": {
+    "title": "Música",
+    "description": "Escucha mi nuevo sencillo \"Ya No Somos Nada\" en tu plataforma favorita.",
+    "albumArt": "/imagen_2.jpg",
+    "albumTitle": "Ya No Somos Nada",
+    "artistName": "Fresh Richie",
+    "streamingLinks": [
+      {
+        "name": "Apple Music",
+        "url": "https://music.apple.com/mx/artist/fresh-richie/1649396663",
+        "icon": "apple"
+      },
+      {
+        "name": "Spotify",
+        "url": "https://open.spotify.com/intl-es/artist/7sbL1QUMiVmBUCDeLvhmtV",
+        "icon": "spotify"
+      },
+      {
+        "name": "YouTube",
+        "url": "https://www.youtube.com/channel/UC0PTxtms1tiYRPnt0AQfLMQ",
+        "icon": "youtube"
+      }
+    ]
+  },
+  "biography": {
+    "title": "Biografía",
+    "image": "/imagen_3.jpg",
+    "content": "Con una energía que electriza y un sonido que rompe barreras, Fresh Richie se está posicionando como una de las voces más prometedoras del género urbano latino. Nacido para hacer vibrar al público, su música es una celebración de la vida, las fiestas y las historias que se viven en la noche.\n\nDesde sus inicios, Fresh Richie ha fusionado los ritmos contagiosos del reggaetón con influencias de trap y dembow, creando un estilo único y auténtico. Sus letras, cargadas de carisma y honestidad, conectan directamente con una audiencia joven que busca himnos para sus mejores momentos.\n\nCada canción es un viaje, cada video una experiencia visual impactante. Prepárate para unirte al movimiento de un artista que no solo hace música, sino que crea una atmósfera de fiesta y libertad sin fin."
+  },
+  "gallery": {
+    "title": "Galería",
+    "description": "Momentos capturados en el estudio y en el escenario.",
+    "images": [
+      "/imagen portada.jpg",
+      "/imagen_2.jpg",
+      "/imagen_3.jpg",
+      "/imagen_4.jpg"
+    ]
+  },
+  "videos": {
+    "title": "Videos",
+    "description": "Mira los videos oficiales y contenido exclusivo.",
+    "featuredVideo": "https://www.youtube.com/embed/QBHW1Hxy4uI",
+    "youtubeChannel": "https://www.youtube.com/channel/UC0PTxtms1tiYRPnt0AQfLMQ"
+  },
+  "events": [
+    {
+      "id": 1,
+      "title": "Concierto en CDMX",
+      "date": "2024-03-15",
+      "location": "Foro Sol",
+      "description": "Presentación del nuevo álbum con invitados especiales",
+      "image": "/imagen_2.jpg",
+      "ticketLink": "https://ticketmaster.com/fresh-richie",
+      "status": "upcoming"
+    },
+    {
+      "id": 2,
+      "title": "Festival de Música Urbana",
+      "date": "2024-04-20",
+      "location": "Guadalajara",
+      "description": "Participación en el festival más importante del género urbano",
+      "image": "/imagen_3.jpg",
+      "ticketLink": "https://festivalurbano.com",
+      "status": "upcoming"
+    }
+  ],
+  "news": [
+    {
+      "id": 1,
+      "title": "Nuevo Sencillo 'Ya No Somos Nada' Disponible",
+      "content": "Fresh Richie presenta su nuevo sencillo que promete ser un hit del verano. La canción fusiona elementos de reggaetón y trap con letras profundas sobre el amor y la pérdida.",
+      "date": "2024-02-01",
+      "image": "/imagen_2.jpg",
+      "category": "music"
+    },
+    {
+      "id": 2,
+      "title": "Fresh Richie en el Estudio",
+      "content": "El artista se encuentra trabajando en su próximo álbum, explorando nuevos sonidos y colaboraciones que sorprenderán a sus fans.",
+      "date": "2024-01-15",
+      "image": "/imagen_3.jpg",
+      "category": "personal"
+    }
+  ]
+}
