@@ -8,7 +8,7 @@
   "homepage": "https://fresh-richie-portfolio.vercel.app",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TU_USUARIO/fresh-richie-portfolio.git"
+    "url": "https://github.com/halvarez22/fresh_richie.git"
   },
   "scripts": {
     "dev": "vite",
