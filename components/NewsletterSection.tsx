@@ -8,7 +8,7 @@ const NewsletterSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-secondary">
+    <section id="newsletter" className="pt-24 pb-20 bg-secondary min-h-[60vh] border-t-4 border-primary/20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-4xl md:text-5xl font-anton uppercase tracking-wider text-primary">
           Únete al Movimiento

@@ -8,6 +8,8 @@ import GalleryEditor from './editors/GalleryEditor';
 import EventsEditor from './editors/EventsEditor';
 import MusicEditor from './editors/MusicEditor';
 import NewsEditor from './editors/NewsEditor';
+import VideoEditor from './editors/VideoEditor';
+import DataManager from './DataManager';
 
 interface AdminPanelProps {
   onClose?: () => void;
@@ -50,6 +52,10 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
         return <MusicEditor onBack={() => setCurrentSection(null)} />;
       case 'news':
         return <NewsEditor onBack={() => setCurrentSection(null)} />;
+      case 'videos':
+        return <VideoEditor onBack={() => setCurrentSection(null)} />;
+      case 'data-manager':
+        return <DataManager onClose={() => setCurrentSection(null)} />;
       default:
         return (
           <div className="min-h-screen bg-black text-white">

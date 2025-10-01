@@ -44,10 +44,17 @@ export interface GalleryContent {
 }
 
 export interface VideoContent {
+  videos: Video[];
+  featuredVideo?: Video;
+}
+
+export interface Video {
+  id: number;
   title: string;
+  url: string;
   description: string;
-  featuredVideo: string;
-  youtubeChannel: string;
+  thumbnail?: string;
+  isFeatured: boolean;
 }
 
 export interface Event {

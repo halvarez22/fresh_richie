@@ -2,6 +2,12 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Asegurar que cada sección tenga suficiente espacio para mostrarse completamente */
+section {
+  scroll-margin-top: 120px; /* Espacio adicional para el navbar fijo */
+  /* Removido min-height: 100vh para evitar problemas de posicionamiento */
+}
+
 body {
   background-color: #000000;
   color: #ffffff;

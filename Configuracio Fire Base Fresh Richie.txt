@@ -1,0 +1,19 @@
+Configuracio Fire Base Fresh Richie
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBu1f2akQ0vx79YFFTYePMlO6Vj07M2Y_Q",
+  authDomain: "freshrichie-eed20.firebaseapp.com",
+  projectId: "freshrichie-eed20",
+  storageBucket: "freshrichie-eed20.firebasestorage.app",
+  messagingSenderId: "565939562411",
+  appId: "1:565939562411:web:f14392e334f2bfc822d4ee"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);

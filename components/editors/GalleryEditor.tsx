@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useContent } from '../../src/hooks/useContent';
 import { GalleryContent } from '../../src/types/content';
+import ImageUpload from '../ImageUpload';
 
 interface GalleryEditorProps {
   onBack: () => void;
@@ -72,17 +73,12 @@ const GalleryEditor: React.FC<GalleryEditorProps> = ({ onBack }) => {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // En una implementación real, aquí subirías la imagen a un servidor
-      const imageUrl = URL.createObjectURL(file);
-      if (gallery) {
-        setGallery(prev => prev ? {
-          ...prev,
-          images: [...prev.images, imageUrl]
-        } : null);
-      }
+  const handleImageUpload = (imageUrl: string) => {
+    if (gallery && imageUrl) {
+      setGallery(prev => prev ? {
+        ...prev,
+        images: [...prev.images, imageUrl]
+      } : null);
     }
   };
 
@@ -165,20 +161,16 @@ const GalleryEditor: React.FC<GalleryEditorProps> = ({ onBack }) => {
               </button>
             </div>
             
-            <div className="mt-4">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="gallery-upload"
+            <div className="mt-6">
+              <ImageUpload
+                currentImage=""
+                onImageChange={handleImageUpload}
+                label="Agregar Imagen desde Archivo"
+                placeholder="Selecciona una imagen para agregar a la galería"
+                previewClassName="w-full h-32 object-cover rounded-lg"
+                showPreview={false}
+                uploadPath="gallery/"
               />
-              <label
-                htmlFor="gallery-upload"
-                className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg cursor-pointer transition-colors"
-              >
-                📁 Subir Archivo
-              </label>
             </div>
           </div>
 

@@ -48,7 +48,7 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-secondary">
+    <section id="contact" className="pt-24 pb-20 bg-secondary min-h-[80vh] border-t-4 border-primary/20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-anton uppercase tracking-wider text-primary">

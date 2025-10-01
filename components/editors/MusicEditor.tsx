@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useContent } from '../../src/hooks/useContent';
 import { MusicContent, StreamingLink } from '../../src/types/content';
+import ImageUpload from '../ImageUpload';
 
 interface MusicEditorProps {
   onBack: () => void;
@@ -82,10 +83,8 @@ const MusicEditor: React.FC<MusicEditorProps> = ({ onBack }) => {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && music) {
-      const imageUrl = URL.createObjectURL(file);
+  const handleImageUpload = (imageUrl: string) => {
+    if (music) {
       setMusic(prev => prev ? { ...prev, albumArt: imageUrl } : null);
     }
   };
@@ -126,32 +125,28 @@ const MusicEditor: React.FC<MusicEditorProps> = ({ onBack }) => {
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Imagen del Álbum */}
               <div className="lg:w-1/3">
-                <div className="bg-gray-800 rounded-lg p-6 text-center">
-                  <img
-                    src={music.albumArt}
-                    alt="Portada del álbum"
-                    className="w-full h-64 object-cover rounded-lg mb-4"
-                  />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="album-upload"
-                  />
-                  <label
-                    htmlFor="album-upload"
-                    className="block bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg cursor-pointer transition-colors mb-2"
-                  >
-                    📸 Cambiar Portada
+                <ImageUpload
+                  currentImage={music.albumArt}
+                  onImageChange={handleImageUpload}
+                  label="Portada del Álbum"
+                  placeholder="Selecciona la portada del álbum"
+                  previewClassName="w-full h-64 object-cover rounded-lg"
+                  uploadPath="music/"
+                />
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    URL Alternativa
                   </label>
                   <input
                     type="text"
                     value={music.albumArt}
                     onChange={(e) => setMusic(prev => prev ? { ...prev, albumArt: e.target.value } : null)}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:border-primary focus:outline-none"
-                    placeholder="/imagen_2.jpg"
+                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                    placeholder="https://ejemplo.com/portada.jpg"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    O pega una URL de imagen si prefieres
+                  </p>
                 </div>
               </div>
               

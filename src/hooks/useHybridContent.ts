@@ -1,17 +1,36 @@
 import { useState, useEffect } from 'react';
 import { ContentData } from '../types/content';
+import { useFirebaseContent } from './useFirebaseContent';
 
-export const useContent = () => {
+// Hook híbrido que usa Firebase cuando está disponible, localStorage como fallback
+export const useHybridContent = () => {
+  const [useFirebase, setUseFirebase] = useState(false);
+  
+  // Detectar si Firebase está configurado
+  useEffect(() => {
+    const firebaseEnabled = import.meta.env.VITE_USE_FIREBASE === 'true' && 
+                           import.meta.env.VITE_FIREBASE_PROJECT_ID;
+    setUseFirebase(firebaseEnabled);
+    
+    console.log('🔄 useHybridContent: Firebase mode:', firebaseEnabled ? 'enabled' : 'disabled');
+  }, []);
+
+  // Hook de Firebase
+  const firebaseHook = useFirebaseContent();
+  
+  // Hook de localStorage (el original)
   const [content, setContent] = useState<ContentData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadContent();
-  }, []);
+    if (!useFirebase) {
+      loadLocalContent();
+    }
+  }, [useFirebase]);
 
-  const loadContent = async () => {
-    console.log('🔄 useContent: Starting content load...');
+  const loadLocalContent = async () => {
+    console.log('🔄 useHybridContent: Loading from localStorage...');
     const startTime = performance.now();
     
     try {
@@ -20,10 +39,10 @@ export const useContent = () => {
       // Primero intentar cargar desde localStorage (cambios guardados)
       const savedContent = localStorage.getItem('fresh-richie-content');
       if (savedContent) {
-        console.log('📦 useContent: Found saved content in localStorage');
+        console.log('📦 useHybridContent: Found saved content in localStorage');
         try {
           const data: ContentData = JSON.parse(savedContent);
-          console.log('📦 useContent: Successfully parsed localStorage content:', {
+          console.log('📦 useHybridContent: Successfully parsed localStorage content:', {
             hasVideos: !!data.videos,
             videosLength: data.videos?.videos?.length || 0,
             hasEvents: !!data.events,
@@ -33,28 +52,27 @@ export const useContent = () => {
           setError(null);
           setIsLoading(false);
           const loadTime = performance.now() - startTime;
-          console.log(`✅ useContent: Content loaded from localStorage in ${loadTime.toFixed(2)}ms`);
+          console.log(`✅ useHybridContent: Content loaded from localStorage in ${loadTime.toFixed(2)}ms`);
           return;
         } catch (parseError) {
-          console.error('❌ useContent: Error parsing localStorage content:', parseError);
-          // Clear corrupted data and continue to fetch
+          console.error('❌ useHybridContent: Error parsing localStorage content:', parseError);
           localStorage.removeItem('fresh-richie-content');
         }
       }
       
       // Si no hay contenido guardado, cargar desde el archivo JSON
-      console.log('🌐 useContent: Fetching content from /content.json...');
+      console.log('🌐 useHybridContent: Fetching content from /content.json...');
       const fetchStartTime = performance.now();
       
       const response = await fetch('/content.json', {
-        cache: 'no-cache', // Ensure we get fresh data
+        cache: 'no-cache',
         headers: {
           'Cache-Control': 'no-cache'
         }
       });
       
       const fetchTime = performance.now() - fetchStartTime;
-      console.log(`🌐 useContent: Fetch completed in ${fetchTime.toFixed(2)}ms, status: ${response.status}`);
+      console.log(`🌐 useHybridContent: Fetch completed in ${fetchTime.toFixed(2)}ms, status: ${response.status}`);
       
       if (!response.ok) {
         throw new Error(`Error al cargar el contenido: ${response.status} ${response.statusText}`);
@@ -64,7 +82,7 @@ export const useContent = () => {
       const data: ContentData = await response.json();
       const parseTime = performance.now() - parseStartTime;
       
-      console.log(`📄 useContent: JSON parsed in ${parseTime.toFixed(2)}ms`, {
+      console.log(`📄 useHybridContent: JSON parsed in ${parseTime.toFixed(2)}ms`, {
         hasVideos: !!data.videos,
         videosLength: data.videos?.videos?.length || 0,
         hasEvents: !!data.events,
@@ -75,76 +93,68 @@ export const useContent = () => {
       setError(null);
       
       const totalTime = performance.now() - startTime;
-      console.log(`✅ useContent: Total content load completed in ${totalTime.toFixed(2)}ms`);
+      console.log(`✅ useHybridContent: Total content load completed in ${totalTime.toFixed(2)}ms`);
       
     } catch (err) {
       const errorTime = performance.now() - startTime;
-      console.error(`❌ useContent: Error after ${errorTime.toFixed(2)}ms:`, err);
+      console.error(`❌ useHybridContent: Error after ${errorTime.toFixed(2)}ms:`, err);
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
       setIsLoading(false);
       const finalTime = performance.now() - startTime;
-      console.log(`🏁 useContent: Hook completed in ${finalTime.toFixed(2)}ms`);
+      console.log(`🏁 useHybridContent: Hook completed in ${finalTime.toFixed(2)}ms`);
     }
   };
 
-  const updateContent = async (newContent: ContentData) => {
+  const updateLocalContent = async (newContent: ContentData) => {
     const startTime = performance.now();
     try {
-      console.log('💾 useContent: Starting content save...', {
+      console.log('💾 useHybridContent: Saving content to localStorage:', {
         hasVideos: !!newContent.videos,
         videosLength: newContent.videos?.videos?.length || 0,
         hasEvents: !!newContent.events,
         eventsLength: newContent.events?.length || 0
       });
       
-      // Validar que el contenido no esté vacío o corrupto
       if (!newContent || typeof newContent !== 'object') {
         throw new Error('Contenido inválido para guardar');
       }
       
-      // Crear backup del contenido anterior
       const currentContent = localStorage.getItem('fresh-richie-content');
       if (currentContent) {
         localStorage.setItem('fresh-richie-content-backup', currentContent);
-        console.log('📦 useContent: Backup created successfully');
+        console.log('📦 useHybridContent: Backup created successfully');
       }
       
-      // Actualizar estado primero
       setContent(newContent);
       
-      // Guardar en localStorage con validación
       const contentString = JSON.stringify(newContent);
       localStorage.setItem('fresh-richie-content', contentString);
       
-      // Verificar que se guardó correctamente
       const savedContent = localStorage.getItem('fresh-richie-content');
       if (!savedContent || savedContent !== contentString) {
         throw new Error('Error de verificación: el contenido no se guardó correctamente');
       }
       
       const saveTime = performance.now() - startTime;
-      console.log(`✅ useContent: Content saved successfully in ${saveTime.toFixed(2)}ms`);
-      console.log('💾 useContent: Saved content size:', Math.round(contentString.length / 1024), 'KB');
+      console.log(`✅ useHybridContent: Content saved successfully in ${saveTime.toFixed(2)}ms`);
+      console.log('💾 useHybridContent: Saved content size:', Math.round(contentString.length / 1024), 'KB');
       
-      // Limpiar error si existía
       setError(null);
-      
       return true;
     } catch (err) {
       const errorTime = performance.now() - startTime;
-      console.error(`❌ useContent: Save failed after ${errorTime.toFixed(2)}ms:`, err);
+      console.error(`❌ useHybridContent: Save failed after ${errorTime.toFixed(2)}ms:`, err);
       
-      // Intentar restaurar desde backup si existe
       const backup = localStorage.getItem('fresh-richie-content-backup');
       if (backup) {
         try {
           const backupData = JSON.parse(backup);
           setContent(backupData);
           localStorage.setItem('fresh-richie-content', backup);
-          console.log('🔄 useContent: Restored from backup successfully');
+          console.log('🔄 useHybridContent: Restored from backup successfully');
         } catch (backupError) {
-          console.error('❌ useContent: Backup restoration failed:', backupError);
+          console.error('❌ useHybridContent: Backup restoration failed:', backupError);
         }
       }
       
@@ -154,8 +164,8 @@ export const useContent = () => {
     }
   };
 
-  const saveContent = async (section: keyof ContentData, data: any) => {
-    console.log(`💾 useContent: Saving section "${section}" with data:`, {
+  const saveLocalContent = async (section: keyof ContentData, data: any) => {
+    console.log(`💾 useHybridContent: Saving section "${section}" with data:`, {
       dataType: typeof data,
       isArray: Array.isArray(data),
       hasVideos: data?.videos?.length || 0,
@@ -163,18 +173,17 @@ export const useContent = () => {
     });
     
     if (!content) {
-      console.error('❌ useContent: No content available to update');
+      console.error('❌ useHybridContent: No content available to update');
       return false;
     }
     
     try {
-      // Validar datos específicos por sección
       if (section === 'videos' && data) {
         if (!data.videos || !Array.isArray(data.videos)) {
-          console.error('❌ useContent: Invalid videos data structure');
+          console.error('❌ useHybridContent: Invalid videos data structure');
           return false;
         }
-        console.log(`📹 useContent: Saving ${data.videos.length} videos`);
+        console.log(`📹 useHybridContent: Saving ${data.videos.length} videos`);
       }
       
       const updatedContent = {
@@ -182,62 +191,58 @@ export const useContent = () => {
         [section]: data
       };
       
-      const success = await updateContent(updatedContent);
+      const success = await updateLocalContent(updatedContent);
       
       if (success) {
-        console.log(`✅ useContent: Section "${section}" saved successfully`);
+        console.log(`✅ useHybridContent: Section "${section}" saved successfully`);
       } else {
-        console.error(`❌ useContent: Failed to save section "${section}"`);
+        console.error(`❌ useHybridContent: Failed to save section "${section}"`);
       }
       
       return success;
     } catch (err) {
-      console.error(`❌ useContent: Error saving section "${section}":`, err);
+      console.error(`❌ useHybridContent: Error saving section "${section}":`, err);
       return false;
     }
   };
 
-  // Función para verificar integridad de datos
-  const verifyDataIntegrity = () => {
+  // Funciones de utilidad para localStorage
+  const verifyLocalDataIntegrity = () => {
     try {
       const savedContent = localStorage.getItem('fresh-richie-content');
       if (!savedContent) return { isValid: false, reason: 'No data found' };
       
       const data = JSON.parse(savedContent);
       
-      // Verificaciones básicas
       if (!data || typeof data !== 'object') {
         return { isValid: false, reason: 'Invalid data structure' };
       }
       
-      // Verificar estructura de videos si existe
       if (data.videos && (!data.videos.videos || !Array.isArray(data.videos.videos))) {
         return { isValid: false, reason: 'Invalid videos structure' };
       }
       
-      console.log('✅ useContent: Data integrity check passed');
+      console.log('✅ useHybridContent: Data integrity check passed');
       return { isValid: true, reason: 'Data is valid' };
     } catch (err) {
-      console.error('❌ useContent: Data integrity check failed:', err);
+      console.error('❌ useHybridContent: Data integrity check failed:', err);
       return { isValid: false, reason: 'Parse error' };
     }
   };
   
-  // Función para limpiar datos corruptos
-  const clearCorruptedData = () => {
+  const clearLocalCorruptedData = () => {
     try {
       localStorage.removeItem('fresh-richie-content');
       localStorage.removeItem('fresh-richie-content-backup');
-      console.log('🧹 useContent: Corrupted data cleared');
+      console.log('🧹 useHybridContent: Corrupted data cleared');
       return true;
     } catch (err) {
-      console.error('❌ useContent: Failed to clear corrupted data:', err);
+      console.error('❌ useHybridContent: Failed to clear corrupted data:', err);
       return false;
     }
   };
   
-  // Función para exportar datos (backup manual)
-  const exportData = () => {
+  const exportLocalData = () => {
     try {
       if (!content) return null;
       
@@ -254,23 +259,38 @@ export const useContent = () => {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
       
-      console.log('📤 useContent: Data exported successfully');
+      console.log('📤 useHybridContent: Data exported successfully');
       return true;
     } catch (err) {
-      console.error('❌ useContent: Export failed:', err);
+      console.error('❌ useHybridContent: Export failed:', err);
       return false;
     }
   };
 
-  return {
-    content,
-    isLoading,
-    error,
-    loadContent,
-    updateContent,
-    saveContent,
-    verifyDataIntegrity,
-    clearCorruptedData,
-    exportData
-  };
+  // Retornar el hook apropiado según la configuración
+  if (useFirebase) {
+    console.log('🔥 useHybridContent: Using Firebase mode');
+    return {
+      ...firebaseHook,
+      mode: 'firebase' as const
+    };
+  } else {
+    console.log('💾 useHybridContent: Using localStorage mode');
+    return {
+      content,
+      isLoading,
+      error,
+      isOnline: true, // localStorage siempre está "online"
+      loadContent: loadLocalContent,
+      updateContent: updateLocalContent,
+      saveContent: saveLocalContent,
+      exportData: exportLocalData,
+      verifyDataIntegrity: verifyLocalDataIntegrity,
+      clearCorruptedData: clearLocalCorruptedData,
+      mode: 'localStorage' as const
+    };
+  }
 };
+
+// Alias para mantener compatibilidad
+export const useContent = useHybridContent;

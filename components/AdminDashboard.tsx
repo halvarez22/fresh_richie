@@ -1,6 +1,7 @@
 import React from 'react';
-import { useContent } from '../src/hooks/useContent';
+import { useContent } from '../src/hooks/useHybridContent';
 import { useAuth } from '../src/contexts/AuthContext';
+import { put } from '@vercel/blob';
 
 interface AdminDashboardProps {
   onEditSection: (section: string) => void;
@@ -8,7 +9,7 @@ interface AdminDashboardProps {
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ onEditSection, onClose }) => {
-  const { content, isLoading } = useContent();
+  const { content, isLoading, updateContent } = useContent();
   const { logout } = useAuth();
 
   if (isLoading) {
@@ -64,7 +65,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onEditSection, onClose 
       id: 'videos',
       title: 'Videos',
       icon: '🎬',
-      description: 'Videos de YouTube',
+      description: `${content.videos?.videos?.length || 0} videos (YouTube + Locales)`,
       status: 'active'
     },
     {
@@ -82,6 +83,98 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onEditSection, onClose 
       status: 'active'
     }
   ];
+
+  const addPhoto = () => {
+    if ((import.meta as any).env.DEV) {
+      // En desarrollo local, usar URL
+      const url = prompt('Ingresa la URL de la nueva foto:');
+      if (url && content) {
+        const newContent = {
+          ...content,
+          gallery: {
+            ...content.gallery,
+            images: [...content.gallery.images, url]
+          }
+        };
+        updateContent(newContent);
+      }
+    } else {
+      // En producción, subir archivo
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = async (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (file && content) {
+          try {
+            const { url } = await put(file.name, file, { access: 'public' });
+            const newContent = {
+              ...content,
+              gallery: {
+                ...content.gallery,
+                images: [...content.gallery.images, url]
+              }
+            };
+            updateContent(newContent);
+          } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Error al subir la imagen. Inténtalo de nuevo.');
+          }
+        }
+      };
+      input.click();
+    }
+  };
+
+  const addEvent = () => {
+    const title = prompt('Título del evento:');
+    const date = prompt('Fecha (YYYY-MM-DD):');
+    const location = prompt('Ubicación:');
+    const description = prompt('Descripción:');
+    const image = prompt('URL de la imagen:');
+    const ticketLink = prompt('Enlace de boletos:');
+    if (title && date && location && content) {
+      const newEvent = {
+        id: Date.now(), // simple ID
+        title,
+        date,
+        location,
+        description: description || '',
+        image: image || '/placeholder.jpg',
+        ticketLink: ticketLink || '',
+        status: 'upcoming' as const
+      };
+      const newContent = {
+        ...content,
+        events: [...content.events, newEvent]
+      };
+      updateContent(newContent);
+    }
+  };
+
+  const addNews = () => {
+    const title = prompt('Título de la noticia:');
+    const newsContent = prompt('Contenido de la noticia:');
+    const image = prompt('URL de la imagen:');
+    const categoryInput = prompt('Categoría (music, events, personal):');
+    const validCategories = ['music', 'events', 'personal'] as const;
+    const category = validCategories.includes(categoryInput as any) ? categoryInput as 'music' | 'events' | 'personal' : 'personal';
+    if (title && newsContent && content) {
+      const newNewsItem = {
+        id: Date.now(),
+        title,
+        content: newsContent,
+        date: new Date().toISOString().split('T')[0],
+        image: image || '/placeholder.jpg',
+        category
+      };
+      const newContent = {
+        ...content,
+        news: [...content.news, newNewsItem]
+      };
+      updateContent(newContent);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -204,18 +297,51 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onEditSection, onClose 
         </div>
 
         {/* Acciones Rápidas */}
-        <div className="bg-gray-900 rounded-lg p-6">
+        <div className="bg-gray-900 rounded-lg p-6 mb-8">
           <h2 className="text-xl font-bold mb-4">⚡ Acciones Rápidas</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button className="bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg transition-colors">
+            <button
+              onClick={addPhoto}
+              className="bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg transition-colors"
+            >
               📸 Subir Nueva Foto
             </button>
-            <button className="bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg transition-colors">
+            <button
+              onClick={addEvent}
+              className="bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg transition-colors"
+            >
               📅 Agregar Evento
             </button>
-            <button className="bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg transition-colors">
+            <button
+              onClick={addNews}
+              className="bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg transition-colors"
+            >
               📰 Nueva Noticia
             </button>
+          </div>
+        </div>
+
+        {/* Herramientas de Sistema */}
+        <div className="bg-gray-900 rounded-lg p-6">
+          <h2 className="text-xl font-bold mb-4">🛠️ Herramientas de Sistema</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button
+              onClick={() => onEditSection('data-manager')}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-lg transition-colors flex items-center justify-center space-x-3"
+            >
+              <span className="text-xl">🛠️</span>
+              <div className="text-left">
+                <div className="font-semibold">Gestor de Datos</div>
+                <div className="text-sm opacity-80">Backup, integridad y mantenimiento</div>
+              </div>
+            </button>
+            <div className="bg-gray-800 rounded-lg p-4 flex items-center justify-center">
+              <div className="text-center text-gray-400">
+                <div className="text-2xl mb-2">💾</div>
+                <div className="text-sm">Persistencia Automática</div>
+                <div className="text-xs mt-1 text-green-400">✅ Activa</div>
+              </div>
+            </div>
           </div>
         </div>
       </main>

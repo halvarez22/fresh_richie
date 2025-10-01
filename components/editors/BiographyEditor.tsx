@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useContent } from '../../src/hooks/useContent';
 import { BiographyContent } from '../../src/types/content';
+import ImageUpload from '../ImageUpload';
 
 interface BiographyEditorProps {
   onBack: () => void;
@@ -39,14 +40,8 @@ const BiographyEditor: React.FC<BiographyEditorProps> = ({ onBack }) => {
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // En una implementación real, aquí subirías la imagen a un servidor
-      // Por ahora, creamos una URL local para preview
-      const imageUrl = URL.createObjectURL(file);
-      setBiography(prev => prev ? { ...prev, image: imageUrl } : null);
-    }
+  const handleImageChange = (imageUrl: string) => {
+    setBiography(prev => prev ? { ...prev, image: imageUrl } : null);
   };
 
   if (!biography) {
@@ -84,25 +79,28 @@ const BiographyEditor: React.FC<BiographyEditorProps> = ({ onBack }) => {
             <h2 className="text-xl font-semibold mb-4">🖼️ Imagen Principal</h2>
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-1/3">
-                <div className="bg-gray-800 rounded-lg p-4 text-center">
-                  <img
-                    src={biography.image}
-                    alt="Imagen actual"
-                    className="w-full h-48 object-cover rounded-lg mb-4"
-                  />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                    id="image-upload"
-                  />
-                  <label
-                    htmlFor="image-upload"
-                    className="block bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg cursor-pointer transition-colors"
-                  >
-                    📸 Cambiar Imagen
+                <ImageUpload
+                  currentImage={biography.image}
+                  onImageChange={handleImageChange}
+                  label="Imagen de Perfil"
+                  placeholder="Selecciona una imagen de perfil"
+                  previewClassName="w-full h-48 object-cover rounded-lg"
+                  uploadPath="biography/"
+                />
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    URL Alternativa
                   </label>
+                  <input
+                    type="text"
+                    value={biography.image}
+                    onChange={(e) => setBiography(prev => prev ? { ...prev, image: e.target.value } : null)}
+                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                    placeholder="https://ejemplo.com/perfil.jpg"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    O pega una URL de imagen si prefieres
+                  </p>
                 </div>
               </div>
               <div className="md:w-2/3">

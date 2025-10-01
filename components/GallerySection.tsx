@@ -10,7 +10,7 @@ const GallerySection: React.FC = () => {
   ];
 
   return (
-    <section id="gallery" className="py-20 bg-black">
+    <section id="gallery" className="pt-24 pb-20 bg-black min-h-[70vh] border-t-4 border-primary/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-4xl md:text-5xl font-anton uppercase tracking-wider text-primary">
           Galería

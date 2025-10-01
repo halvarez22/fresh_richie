@@ -47,10 +47,22 @@
     ]
   },
   "videos": {
-    "title": "Videos",
-    "description": "Mira los videos oficiales y contenido exclusivo.",
-    "featuredVideo": "https://www.youtube.com/embed/QBHW1Hxy4uI",
-    "youtubeChannel": "https://www.youtube.com/channel/UC0PTxtms1tiYRPnt0AQfLMQ"
+    "videos": [
+      {
+        "id": 1,
+        "title": "Fresh Richie - Video Oficial",
+        "url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        "description": "Video oficial de Fresh Richie",
+        "isFeatured": true
+      },
+      {
+        "id": 2,
+        "title": "Fresh Richie - Demo Video",
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "Video de demostración con URL normal de YouTube",
+        "isFeatured": false
+      }
+    ]
   },
   "events": [
     {

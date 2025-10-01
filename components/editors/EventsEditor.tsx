@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useContent } from '../../src/hooks/useContent';
 import { Event } from '../../src/types/content';
+import ImageUpload from '../ImageUpload';
 
 interface EventsEditorProps {
   onBack: () => void;
@@ -59,7 +60,7 @@ const EventsEditor: React.FC<EventsEditorProps> = ({ onBack }) => {
     setShowForm(true);
   };
 
-  const saveEvent = () => {
+  const saveEvent = async () => {
     if (!editingEvent) return;
 
     const eventIndex = events.findIndex(e => e.id === editingEvent.id);
@@ -73,25 +74,38 @@ const EventsEditor: React.FC<EventsEditorProps> = ({ onBack }) => {
       setEvents(prev => [...prev, editingEvent]);
     }
     
+    // Auto-guardar después de cada cambio
+    try {
+      const updatedEvents = eventIndex >= 0 
+        ? events.map((e, i) => i === eventIndex ? editingEvent : e)
+        : [...events, editingEvent];
+      await saveContent('events', updatedEvents);
+    } catch (error) {
+      console.error('Error auto-guardando evento:', error);
+    }
+    
     setShowForm(false);
     setEditingEvent(null);
   };
 
-  const deleteEvent = (eventId: number) => {
+  const deleteEvent = async (eventId: number) => {
     if (confirm('¿Estás seguro de que quieres eliminar este evento?')) {
-      setEvents(prev => prev.filter(e => e.id !== eventId));
+      const updatedEvents = events.filter(e => e.id !== eventId);
+      setEvents(updatedEvents);
+      
+      // Auto-guardar después de eliminar
+      try {
+        await saveContent('events', updatedEvents);
+      } catch (error) {
+        console.error('Error auto-guardando después de eliminar:', error);
+      }
     }
   };
 
-  const toggleEventStatus = (eventId: number) => {
-    setEvents(prev => prev.map(event => 
-      event.id === eventId 
-        ? { 
-            ...event, 
-            status: event.status === 'upcoming' ? 'past' : 'upcoming' 
-          }
-        : event
-    ));
+  const handleImageChange = (imageUrl: string) => {
+    if (editingEvent) {
+      setEditingEvent(prev => prev ? { ...prev, image: imageUrl } : null);
+    }
   };
 
   if (showForm && editingEvent) {
@@ -190,17 +204,30 @@ const EventsEditor: React.FC<EventsEditorProps> = ({ onBack }) => {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  URL de la Imagen
-                </label>
-                <input
-                  type="text"
-                  value={editingEvent.image}
-                  onChange={(e) => setEditingEvent(prev => prev ? { ...prev, image: e.target.value } : null)}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-                  placeholder="/evento1.jpg"
+              <div className="md:col-span-2">
+                <ImageUpload
+                  currentImage={editingEvent.image}
+                  onImageChange={handleImageChange}
+                  label="Imagen del Evento"
+                  placeholder="Selecciona una imagen para el evento"
+                  previewClassName="w-full h-48 object-cover rounded-lg"
+                  uploadPath="events/"
                 />
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    URL Alternativa
+                  </label>
+                  <input
+                    type="text"
+                    value={editingEvent.image}
+                    onChange={(e) => setEditingEvent(prev => prev ? { ...prev, image: e.target.value } : null)}
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                    placeholder="https://ejemplo.com/evento.jpg"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    O pega una URL de imagen si prefieres
+                  </p>
+                </div>
               </div>
 
               <div>

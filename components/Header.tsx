@@ -34,13 +34,16 @@ const Header: React.FC<HeaderProps> = ({ onAdminModeChange }) => {
   }
 
   return (
-    <header className="relative h-screen flex items-center justify-center text-center overflow-hidden">
+    <header className="relative h-screen flex items-center justify-center text-center overflow-hidden bg-black mb-8">
       <div
         className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
         style={{ backgroundImage: "url('/imagen portada.jpg')" }}
       ></div>
       <div className="absolute top-0 left-0 w-full h-full bg-black opacity-60"></div>
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black via-transparent to-transparent"></div>
+      
+      {/* Separador visual inferior */}
+      <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-black to-transparent z-20"></div>
       
       {/* Botón de Administración */}
       <button

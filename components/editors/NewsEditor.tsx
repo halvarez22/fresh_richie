@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useContent } from '../../src/hooks/useContent';
 import { NewsItem } from '../../src/types/content';
+import ImageUpload from '../ImageUpload';
 
 interface NewsEditorProps {
   onBack: () => void;
@@ -57,7 +58,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({ onBack }) => {
     setShowForm(true);
   };
 
-  const saveNews = () => {
+  const saveNews = async () => {
     if (!editingNews) return;
 
     const newsIndex = news.findIndex(n => n.id === editingNews.id);
@@ -71,21 +72,38 @@ const NewsEditor: React.FC<NewsEditorProps> = ({ onBack }) => {
       setNews(prev => [...prev, editingNews]);
     }
     
+    // Auto-guardar después de cada cambio
+    try {
+      const updatedNews = newsIndex >= 0 
+        ? news.map((n, i) => i === newsIndex ? editingNews : n)
+        : [...news, editingNews];
+      await saveContent('news', updatedNews);
+    } catch (error) {
+      console.error('Error auto-guardando noticia:', error);
+    }
+    
     setShowForm(false);
     setEditingNews(null);
   };
 
-  const deleteNews = (newsId: number) => {
+  const deleteNews = async (newsId: number) => {
     if (confirm('¿Estás seguro de que quieres eliminar esta noticia?')) {
-      setNews(prev => prev.filter(n => n.id !== newsId));
+      const updatedNews = news.filter(n => n.id !== newsId);
+      setNews(updatedNews);
+      
+      // Auto-guardar después de eliminar
+      try {
+        await saveContent('news', updatedNews);
+      } catch (error) {
+        console.error('Error auto-guardando después de eliminar:', error);
+      }
     }
   };
 
-  const moveNews = (fromIndex: number, toIndex: number) => {
-    const newNews = [...news];
-    const [movedNews] = newNews.splice(fromIndex, 1);
-    newNews.splice(toIndex, 0, movedNews);
-    setNews(newNews);
+  const handleImageChange = (imageUrl: string) => {
+    if (editingNews) {
+      setEditingNews(prev => prev ? { ...prev, image: imageUrl } : null);
+    }
   };
 
   if (showForm && editingNews) {
@@ -160,18 +178,31 @@ const NewsEditor: React.FC<NewsEditorProps> = ({ onBack }) => {
                   />
                 </div>
 
-                <div>
+              <div className="md:col-span-2">
+                <ImageUpload
+                  currentImage={editingNews.image}
+                  onImageChange={handleImageChange}
+                  label="Imagen de la Noticia"
+                  placeholder="Selecciona una imagen para la noticia"
+                  previewClassName="w-full h-48 object-cover rounded-lg"
+                  uploadPath="news/"
+                />
+                <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    URL de la Imagen
+                    URL Alternativa
                   </label>
                   <input
                     type="text"
                     value={editingNews.image}
                     onChange={(e) => setEditingNews(prev => prev ? { ...prev, image: e.target.value } : null)}
                     className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-                    placeholder="/noticia1.jpg"
+                    placeholder="https://ejemplo.com/noticia.jpg"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    O pega una URL de imagen si prefieres
+                  </p>
                 </div>
+              </div>
               </div>
 
               {/* Contenido */}
